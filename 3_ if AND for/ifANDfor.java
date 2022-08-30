@@ -107,5 +107,69 @@
 		// [3] : 삼항 연산자를 이용하여 12시 보다 작으면 오전, 크면 오후 출력
 		String ampm = hour < 12 ? "AM" : "PM";
 		System.out.println( "[3]" + ampm );
+
+		/**
+		 * 문제: JAVA의 반복문 종류를 열거해보시고, 각각의 기본적인 사용법을 코드로 구현해보시오.
+		 * 이 문제는 JAVA의 여러 반복문 종류와 각각의 개념과 기본 사용법에 대해서 아는지를 묻는 문제이다.
+		 * 
+		 * 답변: 
+		 */
+		for (int idx = 0; idx < 10; idx++) {
+			System.out.print(idx);
+		}
+		System.out.println();
+
+		int idx = 0;
+		while (idx < 10) {
+			System.out.print(idx);
+			idx++;
+		}
+		System.out.println();
+
+		int idx2 = 0;
+		do {
+			System.out.print(idx2);
+			idx2++;
+		} while (idx2 < 10);
+		System.out.println();
+
+		/**
+		 * 문제: 알파벳 26개 문자를 대문자로 출력하는 반복문을 구현하시오.
+		 * 이 문제는 알파벳 문자중 대문자 아스키 코드에 대해서 알고 반복문으로 출력할 수 있는지를 묻는 문제이다.
+		 * 
+		 * 답변: 
+		 */
+		for (int i = 65; i <= 90; i++) {
+			System.out.print((char)i + " ");
+		}
+		System.out.println();
+
+		int i = 65;
+		while (i <= 90) {
+			System.out.print((char)i + " ");
+			i++;
+		}
+		System.out.println();
+
+		int i2 = 65;
+		do {
+			System.out.print((char)i2 + " ");
+			i2++;
+		} while (i2 <= 90);
+		System.out.println();
+
+		/**
+		 * 문제: 홀수, 짝수 구하기 문제를 while 반복문을 사용하여 구현해보시오.
+		 * 이 문제는 while 반복문과 그 안에서 조건문을 사용할 수 있는지를 묻는 문제이다.
+		 * 
+		 * 답변: 
+		 */
+		int iii = 1;
+		while (iii < 30) {
+			if (iii % 2 == 0)
+				System.out.print(iii + " ");
+			iii++;
+		}
+
 	}
 }
