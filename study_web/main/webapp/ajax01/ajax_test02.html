@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<script>
+			 const process = (xhr) => {
+				 document.getElementById('data').innerHTML = '<h1>' + xhr.responseText + '</h1>';
+			 };
+			 
+			 const load = (url) => {
+				 let xhr = new XMLHttpRequest();
+				 
+				 xhr.onreadystatechange = () => {
+					 if (xhr.readyState == 4) {
+						 xhr.status == 200 ? process(xhr) : console.log('에러: ' + xhr.status);
+					 }
+				 };
+				 
+				 let name = document.getElementById('name').value;
+				 
+				 xhr.open('GET', url + '?name=' + name, true);
+				 xhr.send(null);
+			 };
+		</script>
+	</head>
+	<body>
+		<input type="text" id="name" />
+		<input type="button" value="say" onclick="load('iam.jsp')" />
+		<hr />
+		<div id="data"></div>
+		<hr />
+	</body>
+</html>

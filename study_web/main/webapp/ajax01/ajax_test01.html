@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<script>
+			/**
+			 * AJAX(Asynchonous Javascript And Xml)
+			 * 자바스크립트를 이용한 비동기적 통신
+			 * 
+			 * EX) 네이버 검색어, 구글 지도, 댓글 등등
+			 * 
+			 * xhr.readyState
+			 * 0: uninitialized => xhr전
+			 * 1: open => 통신 시작
+			 * 2: send => 통신 요청
+			 * 3: interactive => 데이터 받는중...
+			 * 4: complete => 응답완료
+			 * 
+			 * xhr.status
+			 * 응답 코드에 관련된 프로퍼티
+			 */
+			 const createXMLHttpRequest = () => {
+				return new XMLHttpRequest();
+			 };
+			 
+			 const process = (xhr) => {
+				 document.getElementById('data').innerHTML = xhr.responseText;
+			 };
+			 
+			 const load = (url) => {
+				 let xhr = new XMLHttpRequest();
+				 
+				 // 콜백 함수를 걸어줌.
+				 xhr.onreadystatechange = () => {
+					 // console.log('xhr.readyState: ' + xhr.readyState);
+					 if (xhr.readyState == 4) {
+						 xhr.status == 200 ? process(xhr) : console.log('에러: ' + xhr.status);
+					 }
+				 };
+				 
+				 xhr.open('GET', url, true); // 비동기 방식으로 통신
+				 xhr.send(null);
+			 };
+		</script>
+	</head>
+	<body>
+		<input type="button" value="테스트" onclick="load('msg.txt')" />
+		<input type="button" value="테스트" onclick="load('msg.jsp')" />
+		<div id="data"></div>
+	</body>
+</html>

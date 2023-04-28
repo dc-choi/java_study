@@ -38,6 +38,15 @@
   	<url-pattern>/game</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+  	<servlet-name>iam</servlet-name>
+  	<servlet-class>servlet.Iam</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>iam</servlet-name>
+  	<url-pattern>/Iam</url-pattern>
+  </servlet-mapping>
+  
   <!-- DispatcherServlet -->
   <servlet>
   	<servlet-name>dispatcher</servlet-name>

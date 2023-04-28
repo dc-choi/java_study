@@ -2,11 +2,13 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Hello</title>
-</head>
-<body>
-뷁
-</body>
+	<head>
+		<meta charset="UTF-8">
+		<title>Hello</title>
+	</head>
+	<body>
+		<%
+			response.sendRedirect("BoardList.do");
+		%>
+	</body>
 </html>
