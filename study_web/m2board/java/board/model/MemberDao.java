@@ -46,4 +46,101 @@ public class MemberDao {
 		if (prestate != null) try { prestate.close(); } catch(Exception e) {}
 		if (conn != null) try { conn.close(); } catch(Exception e) {}
 	}
+
+	public int checkID(String id) {
+		Connection conn = null;
+		PreparedStatement state = null;
+		ResultSet result = null;
+		
+		int count = 0;
+		
+		String sql =
+			"SELECT COUNT(*) as count FROM tbl_member " +
+			"WHERE id = ?";
+		
+		try {
+			conn = getConnection();
+			state = conn.prepareStatement(sql);
+			state.setString(1, id);
+			result = state.executeQuery();
+			
+			if (result.next()) {
+				count = result.getInt("count");
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			count = -1;
+		} finally {
+			dbClose(conn, state, result);
+		}
+		
+		return count;
+	}
+
+	public boolean registerMember(MemberDto dto) {
+		Connection conn = null;
+		PreparedStatement state = null;
+		
+		boolean result = false;
+		
+		String sql =
+			"INSERT INTO tbl_member(id, password, name, birth, phone, zipcode, address1, address2) " +
+			"VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+		
+		try {
+			conn = getConnection();
+			state = conn.prepareStatement(sql);
+			state.setString(1, dto.getId());
+			state.setString(2, dto.getPassword());
+			state.setString(3, dto.getName());
+			state.setString(4, dto.getBirth());
+			state.setString(5, dto.getPhone());
+			state.setString(6, dto.getZipcode());
+			state.setString(7, dto.getAddress1());
+			state.setString(8, dto.getAddress2());
+			state.executeUpdate();
+			result = true;
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbClose(conn, state);
+		}
+		
+		return result;
+	}
+
+	public MemberDto getUser(MemberDto dto) {
+		Connection conn = null;
+		PreparedStatement state = null;
+		ResultSet result = null;
+		
+		MemberDto member = null;
+		
+		String sql =
+			"SELECT id, name " +
+			"FROM tbl_member " +
+			"WHERE id = ? AND password = ?";
+		
+		try {
+			conn = getConnection();
+			state = conn.prepareStatement(sql);
+			state.setString(1, dto.getId());
+			state.setString(2, dto.getPassword());
+			result = state.executeQuery();
+			
+			if (result.next()) {
+				member = new MemberDto();
+				member.setId(result.getString("id"));
+				member.setName(result.getString("name"));
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbClose(conn, state, result);
+		}
+		
+		return member;
+	}
 }

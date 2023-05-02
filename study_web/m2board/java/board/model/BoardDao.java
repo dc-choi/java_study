@@ -4,37 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-/**
- * DAO
- * 데이터베이스에 접근하기 위한 객체
- */
 public class BoardDao {
 	private static BoardDao board = null;
-	/**
-	 * 커넥션 풀
-	 * 
-	 * DB와 연결된 커넥션을 미리 만들어서 풀에 저장해두고, 필요할 때 커넥션을 풀에서 가져다 쓰고 반환하는 기법
-	 * 커넥션을 생성하는데 필요한 시간을 줄일 수 있음.
-	 * 사용자가 접속할 때 마다 재사용하기 때문에 프로그램의 효율과 성능이 개선됨.
-	 * 
-	 * 톰켓에서 커넥션 풀을 설정한다고 한다.
-	 * META-INF에서 context.xml을 추가해서 다음 키워드를 입력한다.
-	 * 
-	 * <Resource name="OracleCP"
-      		auth="Container"
-      		driverClassName="oracle.jdbc.OracleDriver"
-      		url="jdbc:oracle:thin:@localhost:1521/xepdb1"
-      		username="oraclejava"
-      		password="oraclejava"
-      		type="javax.sql.DataSource"
-      		maxActive="50"
-      		maxWait="-1" />
-	 */
 	private DataSource source = null;
 	
 	private BoardDao() {
@@ -68,5 +46,201 @@ public class BoardDao {
 		if (result != null) try { result.close(); } catch(Exception e) {}
 		if (prestate != null) try { prestate.close(); } catch(Exception e) {}
 		if (conn != null) try { conn.close(); } catch(Exception e) {}
+	}
+
+	public boolean insertBoard(BoardDto board) {
+		Connection conn = null;
+		PreparedStatement state = null;
+		
+		boolean result = false;
+		
+		String sql =
+			"INSERT INTO tbl_board(no, title, content, id) " +
+			"VALUES(seq_board.nextval, ?, ?, ?)";
+		
+		try {
+			conn = getConnection();
+			state = conn.prepareStatement(sql);
+			state.setString(1, board.getTitle());
+			state.setString(2, board.getContent());
+			state.setString(3, board.getMemberDto().getId());
+			state.executeUpdate();
+			result = true;
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbClose(conn, state);
+		}
+		
+		return result;
+	}
+
+	public List<BoardDto> getBoardList() {
+		Connection conn = null;
+		PreparedStatement state = null;
+		ResultSet result = null;
+		
+		List<BoardDto> list = new ArrayList<BoardDto>();
+		
+		String sql =
+			"SELECT b.no no, b.title title, m.id id, b.regdate regdate, b.readcount readcount, m.name name " +
+			"FROM tbl_board b JOIN tbl_member m " +
+			"ON b.id = m.id ORDER BY no DESC";
+		
+		try {
+			conn = getConnection();
+			state = conn.prepareStatement(sql);
+			result = state.executeQuery();
+			
+			while (result.next()) {
+				MemberDto member = new MemberDto();
+				member.setId(result.getString("id"));
+				member.setName(result.getString("name"));
+				
+				BoardDto board = new BoardDto();
+				board.setNo(result.getLong("no"));
+				board.setTitle(result.getString("title"));
+				board.setRegdate(result.getString("regdate"));
+				board.setReadcount(result.getInt("readcount"));
+				board.setMemberDto(member);
+				
+				list.add(board);
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbClose(conn, state, result);
+		}
+		
+		return list;
+	}
+
+	public BoardDto getBoardView(Long no) {
+		Connection conn = null;
+		PreparedStatement state = null;
+		ResultSet result = null;
+		
+		BoardDto board = null;
+		
+		String sql =
+			"SELECT b.no no, b.title title, b.content content, m.id id, b.regdate regdate, b.readcount readcount, m.name name " +
+			"FROM tbl_board b JOIN tbl_member m " +
+			"ON b.id = m.id " +
+			"WHERE b.no = ?";
+		
+		try {
+			conn = getConnection();
+			state = conn.prepareStatement(sql);
+			state.setLong(1, no);
+			result = state.executeQuery();
+			
+			if (result.next()) {
+				MemberDto member = new MemberDto();
+				member.setId(result.getString("id"));
+				member.setName(result.getString("name"));
+				
+				board = new BoardDto();
+				board.setNo(result.getLong("no"));
+				board.setTitle(result.getString("title"));
+				board.setContent(result.getString("content"));
+				board.setRegdate(result.getString("regdate"));
+				board.setReadcount(result.getInt("readcount"));
+				board.setMemberDto(member);
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbClose(conn, state, result);
+		}
+		
+		return board;
+	}
+
+	public boolean updateReadcount(Long no) {
+		Connection conn = null;
+		PreparedStatement state = null;
+		boolean result = false;
+		
+		String sql = 
+			"UPDATE tbl_board " +
+			"SET readcount = readcount + 1 " +
+			"WHERE no = ?";
+		
+		try {
+			conn = getConnection();
+			state = conn.prepareStatement(sql);
+			state.setLong(1, no);
+			
+			if (state.executeUpdate() > 0) {
+				result = true;
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbClose(conn, state);
+		}
+		
+		return result;
+	}
+
+	public boolean updateBoard(BoardDto board) {
+		Connection conn = null;
+		PreparedStatement state = null;
+		
+		boolean result = false;
+		
+		String sql = 
+			"UPDATE tbl_board " +
+			"SET title = ?, content = ? " +
+			"WHERE no = ? AND id = ?";
+		
+		try {
+			conn = getConnection();
+			state = conn.prepareStatement(sql);
+			state.setString(1, board.getTitle());
+			state.setString(2, board.getContent());
+			state.setLong(3, board.getNo());
+			state.setString(4, board.getMemberDto().getId());
+			
+			if (state.executeUpdate() > 0) {
+				result = true;
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbClose(conn, state);
+		}
+		
+		return result;
+	}
+
+	public boolean deleteBoard(BoardDto board) {
+		Connection conn = null;
+		PreparedStatement state = null;
+		
+		boolean result = false;
+		
+		String sql = 
+			"DELETE FROM tbl_board " +
+			"WHERE no = ? AND id = ?";
+		
+		try {
+			conn = getConnection();
+			state = conn.prepareStatement(sql);
+			state.setLong(1, board.getNo());
+			state.setString(2, board.getMemberDto().getId());
+			
+			if (state.executeUpdate() > 0) {
+				result = true;
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbClose(conn, state);
+		}
+		
+		return result;
 	}
 }
