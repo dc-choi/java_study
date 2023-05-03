@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="employee" class="com.oraclejava.model.Employee">
+        <property name="employeeId" value="190901" />
+        <property name="employeeName" value="오승환" />
+    </bean>
+
+    <!--
+        Spring에서 DI를 해주는 코드...
+    -->
+    <bean id="communication" class="com.oraclejava.service.Communication">
+        <!-- 생성자 패턴으로 DI를 해줄 때... -->
+        <!-- <constructor-arg name="kakaoMessage" ref="kakaoMessage" /> -->
+        <!-- setter 패턴으로 DI를 해줄 때... -->
+        <property name="message" ref="lineMessage" />
+    </bean>
+
+    <bean id="kakaoMessage" class="com.oraclejava.message.KakaoMessage" />
+    <bean id="lineMessage" class="com.oraclejava.message.LineMessage" />
+</beans>

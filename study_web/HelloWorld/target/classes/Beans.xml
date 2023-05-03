@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--
+        외부에서 의존성을 주입해주는 부분이다. DI라고 부름...
+        JAVA Code로는 다음과 같다.
+        Message message = new Message();
+        message.setMessageId(1);
+        message.setMessage("안녕하세요.");
+    -->
+    <bean id="message" class="com.oraclejava.model.Message">
+        <property name="messageId" value="1" />
+        <property name="message" value="안녕하세요." />
+    </bean>
+
+    <bean id="employee" class="com.oraclejava.model.Employee">
+        <property name="employeeId" value="23501" />
+        <property name="employeeName" value="서장훈" />
+    </bean>
+</beans>

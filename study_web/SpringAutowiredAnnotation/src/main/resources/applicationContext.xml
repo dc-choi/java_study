@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 이게 설정이 안되면 @Autowired가 먹지 않음 -->
+    <context:annotation-config />
+
+    <!-- component annotation을 사용하여 Bean 객체를 추가함. -->
+    <!-- <context:component-scan base-package="com.oraclejava.model" /> -->
+
+    <bean id="employee" class="com.oraclejava.model.Employee">
+        <property name="employeeId" value="960805" />
+        <property name="employeeName" value="동철" />
+    </bean>
+
+    <bean id="juminCard" class="com.oraclejava.model.JuminCard">
+        <property name="juminNo" value="960805-1187518" />
+        <property name="juminName" value="최동철" />
+    </bean>
+
+    <bean id="person" class="com.oraclejava.model.Person">
+        <property name="name" value="최동철" />
+        <property name="age" value="28" />
+    </bean>
+
+    <bean id="notebook" class="com.oraclejava.model.Notebook">
+        <property name="name" value="MacBook" />
+        <property name="price" value="300만원" />
+    </bean>
+
+</beans>
