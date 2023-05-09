@@ -9,9 +9,18 @@
             http://www.springframework.org/schema/context/spring-context.xsd
             http://www.springframework.org/schema/mvc
             http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <!-- 인터셉터 등록 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/listMembers"/>
+            <bean class="com.oraclejava.hellospringmvc.interceptor.HelloControllerInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 
-    <!-- 하이버네이트 벨리데이터 활성화 -->
+
+    <!-- 하이버네이트 밸리데이터 활성화 -->
     <mvc:annotation-driven />
+
     <context:component-scan base-package="com.oraclejava.hellospringmvc.controller" />
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -21,7 +30,7 @@
 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basename" value="classpath:messages" />
-        <property name="defaultEncoding" value="UTF-8" />
+        <property name="defaultEncoding" value="UTF-8"/>
     </bean>
 
 </beans>

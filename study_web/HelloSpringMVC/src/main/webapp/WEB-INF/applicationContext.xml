@@ -14,6 +14,35 @@
     <bean id="memberDAO" class="com.oraclejava.hellospringmvc.dao.MemberDAOImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
+    <!--<bean id="memberDAO" class="com.oraclejava.hellospringmvc.dao.MemberDAOImpl_HB">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>-->
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="annotatedClasses">
+            <array>
+                <value>com.oraclejava.hellospringmvc.model.Member</value>
+            </array>
+        </property>
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">
+                    org.hibernate.dialect.Oracle12cDialect
+                </prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
@@ -23,9 +52,12 @@
         </property>
     </bean>
 
-    <!-- Service 등록 -->
-    <bean id="memberService" class="com.oraclejava.hellospringmvc.service.MemberServiceImpl">
+    <!--서비스 등록-->
+    <bean id="memberService"
+          class="com.oraclejava.hellospringmvc.service.MemberServiceImpl">
+        <!-- memberDAO와 연결하는 코드 작성(XML) -->
         <property name="memberDAO" ref="memberDAO" />
     </bean>
+
 
 </beans>

@@ -1,13 +1,14 @@
 package com.oraclejava.hellospringmvc.dao;
 
 import com.oraclejava.hellospringmvc.model.Member;
-import com.oraclejava.hellospringmvc.model.Member;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.util.List;
 
 public class MemberDAOImpl implements MemberDAO {
+
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
@@ -37,15 +38,20 @@ public class MemberDAOImpl implements MemberDAO {
 
     @Override
     public List<Member> getAllMemberDetails() {
-       String sql = "select * from tbl_member order by BIRTH, id";
-       List<Member> memList = jdbcTemplate.query(sql, new MemberRowMapper());
-       return memList;
+        String sql = "select * from tbl_member order by birth desc";
+        List<Member> memList = jdbcTemplate.query(sql, new MemberRowMapper());
+        return memList;
     }
 
     @Override
-    public Member getMemberByIdAndPassword(String id, String password) {
-       String sql = "select * from tbl_member where id = ? AND password = ?";
-       Member member = jdbcTemplate.queryForObject(sql, new MemberRowMapper(), id, password);
-       return member;
+    public Member getMemberByIdAndPassword(String id, String pass) {
+       try {
+           String sql = "select * from TBL_MEMBER where id = ? and PASSWORD = ?";
+           Member member = jdbcTemplate.queryForObject(sql, new MemberRowMapper(), id, pass);
+           return member;
+       } catch (EmptyResultDataAccessException e) {
+           // EmptyResultDataAccessException  예외 발생시 null 리턴
+           return null;
+       }
     }
 }

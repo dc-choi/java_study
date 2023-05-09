@@ -5,23 +5,24 @@
   Time: 오전 11:52
   To change this template use File | Settings | File Templates.
 --%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
     <title>Title</title>
 </head>
 <body>
-    <a href="addMember">멤버 추가</a>
+<a href="/HelloSpringMVC/register">등록</a>
+<a href="/HelloSpringMVC/logout">로그아웃</a>
     <h2>사용자 등록 애플리케이션</h2>
     <table border="1">
         <tr>
-            <th>ID</th>
+            <th>id</th>
             <th>이름</th>
             <th>생년월일</th>
             <th>비번</th>
         </tr>
-        <c:forEach var="member" items="${memberList}">
+        <c:forEach var="member" items="${memberlist}">
             <tr>
                 <td>${member.id}</td>
                 <td>${member.name}</td>

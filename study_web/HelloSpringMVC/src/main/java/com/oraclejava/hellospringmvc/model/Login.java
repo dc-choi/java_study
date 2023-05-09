@@ -3,10 +3,12 @@ package com.oraclejava.hellospringmvc.model;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class Login {
+
     @NotEmpty
     private String id;
+
     @NotEmpty
-    private String password;
+    private String pass;
 
     public String getId() {
         return id;
@@ -16,11 +18,11 @@ public class Login {
         this.id = id;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPass() {
+        return pass;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPass(String pass) {
+        this.pass = pass;
     }
 }
