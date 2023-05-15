@@ -23,6 +23,7 @@ public class MemoryMemberRepository implements MemberRepository {
 
     @Override
     public Optional<Member> findByName(String name) {
+        // 람다식에 대해서 좀 더 공부하기.
         return store.values().stream()
                 .filter(member -> member.getName().equals(name))
                 .findAny();
